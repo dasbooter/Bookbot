@@ -30,8 +30,9 @@ def letters(file):
 					letter_list[lower_letter] += 1
 				else:
 					letter_list[lower_letter] = 1
-	print(letter_list)
+	return letter_list
 
+#Main loop
 def main(book):
     try:
         with open(f"books/{book}") as f:
@@ -42,6 +43,7 @@ def main(book):
 
     menu = ["Read", "How many Words?", "How many Letters?", "Exit"]
     current_index = 0
+    invalid_input_count = 0
 
     while True:
         print("\n" * 100)  # Clear the screen by printing newlines
@@ -57,21 +59,27 @@ def main(book):
         elif key == "s" and current_index < len(menu) - 1:
             current_index += 1
         elif key == "":
-            if current_index == 0:  # Read
+            if current_index == 0:
                 print(file)
                 break
-            elif current_index == 1:  # How many Words?
+            elif current_index == 1:
                 word_count = len(file.split())
                 print(f"Word count: {word_count}")
                 input("Press Enter to continue...")
-            elif current_index == 2:  # How many Letters?
+            elif current_index == 2:
                 letters(file)
+                print("\n".join("I found the letter '{}' occured {} times".format(k, v) for k, v in sorted(letter_list.items(), key=lambda t: str(t[0]))))
                 input("Press Enter to continue...")
-            elif current_index == 3:  # Exit
+            elif current_index == 3:
                 print("Exiting...")
                 break
+            invalid_input_count = 0
         else:
-            print("Invalid input. Use 'w', 's', or ENTER.")
+            invalid_input_count += 1
+            if invalid_input_count <= 5:
+                print("Invalid input. Use 'w' for UP and 's' for DOWN or ENTER.")
+            else:
+                print("W OR S!!!")
             input("Press Enter to continue...")
 
 main(sys.argv[1])
